@@ -37,7 +37,7 @@ void generateExampleAppConstants(List icons) {
       ..methods.addAll(
         [
           buildGetterMethod(
-            returnType: 'List<PhosphorIconData>',
+            returnType: 'List<IconData>',
             name: 'icons',
             body: 'allFlatIconsAsMap.values.toList()',
           ),
@@ -47,7 +47,7 @@ void generateExampleAppConstants(List icons) {
             body: 'allFlatIconsAsMap.keys.toList()',
           ),
           buildGetterMethod(
-            returnType: 'Map<String, PhosphorIconData>',
+            returnType: 'Map<String, IconData>',
             name: 'allFlatIconsAsMap',
             body: '''{
       ...regularIcons,
@@ -71,6 +71,9 @@ void generateExampleAppConstants(List icons) {
     (libraryBuilder) => libraryBuilder
       ..directives.addAll([
         Directive.import(
+          'package:flutter/widgets.dart',
+        ),
+        Directive.import(
           'package:phosphor_flutter/phosphor_flutter.dart',
         ),
       ])
@@ -78,7 +81,9 @@ void generateExampleAppConstants(List icons) {
   );
 
   final emitter = DartEmitter();
-  final generatedFileContent = DartFormatter().format(
+  final generatedFileContent = DartFormatter(
+    languageVersion: DartFormatter.latestLanguageVersion,
+  ).format(
     '${allFilesLib.accept(emitter)}',
   );
 
@@ -126,7 +131,7 @@ Method buildIconsMapGetterByStyle({
   required List<String> lines,
 }) =>
     buildGetterMethod(
-      returnType: 'Map<String, PhosphorIconData>',
+      returnType: 'Map<String, IconData>',
       name: '${style.styleName}Icons',
       body: '{${lines.join(',')}}',
     );

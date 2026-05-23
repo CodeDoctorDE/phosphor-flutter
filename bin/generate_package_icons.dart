@@ -22,7 +22,9 @@ void generateMainClass(List<StyleFileData> styles) {
     ]));
 
   final emitter = DartEmitter();
-  final generatedFileContent = DartFormatter().format(
+  final generatedFileContent = DartFormatter(
+    languageVersion: DartFormatter.latestLanguageVersion,
+  ).format(
     '${phosphorLib.accept(emitter)}',
   );
 
@@ -62,7 +64,7 @@ void generateBaseClass(List icons) {
     (libraryBuilder) => libraryBuilder
       ..directives.addAll([
         Directive.import(
-          'package:phosphor_flutter/src/phosphor_icon_data.dart',
+          'package:flutter/widgets.dart',
         ),
         ...styles.map(
           (style) => Directive.import(
@@ -74,7 +76,9 @@ void generateBaseClass(List icons) {
   );
 
   final emitter = DartEmitter();
-  final generatedFileContent = DartFormatter().format(
+  final generatedFileContent = DartFormatter(
+    languageVersion: DartFormatter.latestLanguageVersion,
+  ).format(
     '${phosphorLib.accept(emitter)}',
   );
   saveContentToFile(
@@ -107,7 +111,7 @@ case PhosphorIconsStyle.${style.styleName}:
       ..defaultTo = Code('PhosphorIconsStyle.regular')
       ..type = Reference('PhosphorIconsStyle')))
     ..body = Code(code)
-    ..returns = Reference('PhosphorIconData'));
+    ..returns = Reference('IconData'));
 }
 
 /// reads the phosphor json  of one style and generates a dart class
@@ -138,11 +142,6 @@ void generateStyleClass(List icons, {required StyleFileData style}) {
     (libraryBuilder) => libraryBuilder
       ..directives.add(
         Directive.import(
-          'package:phosphor_flutter/src/phosphor_icon_data.dart',
-        ),
-      )
-      ..directives.add(
-        Directive.import(
           'package:flutter/widgets.dart',
         ),
       )
@@ -150,7 +149,9 @@ void generateStyleClass(List icons, {required StyleFileData style}) {
   );
 
   final emitter = DartEmitter();
-  final generatedFileContent = DartFormatter().format(
+  final generatedFileContent = DartFormatter(
+    languageVersion: DartFormatter.latestLanguageVersion,
+  ).format(
     '${phosphorLib.accept(emitter)}',
   );
   saveContentToFile(
@@ -172,16 +173,15 @@ Field buildFieldIconByStyle(dynamic icon, {required StyleFileData style}) {
 
   if (style == StyleFileData.duotone && properties['codes'] != null) {
     final graphCodes = (properties['codes'] as List).cast<int>();
-    final backgroundHexCode = '0x' + graphCodes.first.toRadixString(16);
     final foregroundHexCode = '0x' + graphCodes.last.toRadixString(16);
     codeStatement = Code(
-      "PhosphorDuotoneIconData($foregroundHexCode, PhosphorIconData($backgroundHexCode, 'Duotone'),)",
+      "IconData($foregroundHexCode, fontFamily: 'PhosphorDuotone', fontPackage: 'phosphor_flutter', matchTextDirection: true)",
     );
   } else {
     final graphCode = properties['code'] as int;
     final hexCode = '0x' + graphCode.toRadixString(16);
     codeStatement = Code(
-      "PhosphorFlatIconData($hexCode, '${style.styleName.capitalize()}')",
+      "IconData($hexCode, fontFamily: 'Phosphor${style.styleName.capitalize()}', fontPackage: 'phosphor_flutter', matchTextDirection: true)",
     );
   }
 

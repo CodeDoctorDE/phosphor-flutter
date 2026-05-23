@@ -3,50 +3,47 @@ library phosphor_flutter;
 import 'package:flutter/material.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-class PhosphorIcon extends Icon {
+class PhosphorIcon extends StatelessWidget {
   const PhosphorIcon(
-    IconData icon, {
+    this.icon, {
     Key? key,
-    double? size,
-    double? fill,
-    double? weight,
-    double? grade,
-    double? opticalSize,
-    Color? color,
-    List<Shadow>? shadows,
-    String? semanticLabel,
-    TextDirection? textDirection,
+    this.size,
+    this.fill,
+    this.weight,
+    this.grade,
+    this.opticalSize,
+    this.color,
+    this.shadows,
+    this.semanticLabel,
+    this.textDirection,
     this.duotoneSecondaryOpacity = 0.20,
     this.duotoneSecondaryColor,
-  }) : super(
-          icon,
-          color: color,
-          fill: fill,
-          grade: grade,
-          key: key,
-          opticalSize: opticalSize,
-          semanticLabel: semanticLabel,
-          shadows: shadows,
-          size: size,
-          textDirection: textDirection,
-          weight: weight,
-        );
+  }) : super(key: key);
 
+  final IconData icon;
+  final double? size;
+  final double? fill;
+  final double? weight;
+  final double? grade;
+  final double? opticalSize;
+  final Color? color;
+  final List<Shadow>? shadows;
+  final String? semanticLabel;
+  final TextDirection? textDirection;
   final double duotoneSecondaryOpacity;
   final Color? duotoneSecondaryColor;
 
   @override
   Widget build(BuildContext context) {
-    if (icon is PhosphorDuotoneIconData) {
-      final duotoneIcon = icon as PhosphorDuotoneIconData;
+    final secondaryIconData = getPhosphorDuotoneSecondaryIconData(icon);
+    if (secondaryIconData != null) {
       return Stack(
         alignment: Alignment.center,
         children: [
           Opacity(
             opacity: duotoneSecondaryOpacity,
             child: Icon(
-              duotoneIcon.secondary,
-              key: key,
+              secondaryIconData,
               size: size,
               fill: fill,
               weight: weight,
@@ -58,10 +55,25 @@ class PhosphorIcon extends Icon {
               textDirection: textDirection,
             ),
           ),
-          super.build(context),
+          _buildIcon(icon),
         ],
       );
     }
-    return super.build(context);
+    return _buildIcon(icon);
+  }
+
+  Widget _buildIcon(IconData iconData) {
+    return Icon(
+      iconData,
+      size: size,
+      fill: fill,
+      weight: weight,
+      grade: grade,
+      opticalSize: opticalSize,
+      color: color,
+      shadows: shadows,
+      semanticLabel: semanticLabel,
+      textDirection: textDirection,
+    );
   }
 }

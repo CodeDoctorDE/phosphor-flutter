@@ -105,8 +105,8 @@ you can even make the opacity 100% to have a real duocolor icon.
 
 ### Flutter `Icon` Widget
 
-You can use the native flutter `Icon()` widget passing any `PhosphorIcon` value
-like any Material Icon
+You can use the native flutter `Icon()` widget passing any Phosphor icon value
+like any Material Icon.
 
 > NOTE: Due some limitations with the flutter `Icon` widget when you pass a duotone
 > icon it will render it as a simple icon, for this case prefer to use our
